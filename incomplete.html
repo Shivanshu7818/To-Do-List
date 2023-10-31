@@ -1,0 +1,189 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css" rel="stylesheet"    integrity="sha384-EVSTQN3/azprG1Anm3QDgpJLIm9Nao0Yz1ztcQTwFspd3yD65VohhpuuCOmLASjC" crossorigin="anonymous">
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/js/bootstrap.bundle.min.js" integrity="sha384-MrcW6ZMFYlzcLA8Nl+NtUVF0sA7MsXsP1UyJoMp4YLEuNSfAP+JcXn/tWtIaxVXM" crossorigin="anonymous"></script>
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css" rel="stylesheet">
+    <style>
+        body {    
+            background-image: url("./dolist.png");
+        } 
+    </style>
+</head>
+<body>
+    
+        <!-- Nav bar start -->
+        <div class="container" id="main">
+            <nav class="navbar navbar-expand-lg navbar-dark bg-dark">
+                <div class="container-fluid">
+                    <img src="logo.png" alt="" width="50" height="50" class="d-inline-block align-text-top">
+                  <a class="navbar-brand" href="#"><h1>To Do LIST</h1></a>
+                  <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+                    <span class="navbar-toggler-icon"></span>
+                  </button>
+                  <div class="collapse navbar-collapse" id="navbarSupportedContent">
+                    <ul class="navbar-nav ms-auto mb-2 mb-lg-0">
+                      <li class="nav-item">
+                        <a class="nav-link active" aria-current="page" href="layout.html">Home</a>
+                      </li>
+                      <li class="nav-item">
+                        <a class="nav-link active" aria-current="page" href="tasklist.html">Tasklist</a>
+                      </li>
+                      <li class="nav-item">
+                        <a class="nav-link active" aria-current="page" href="complete.html">Complete</a>
+                      </li>
+                      <li class="nav-item">
+                        <a class="nav-link active" aria-current="page" href="incomplete.html">Incomplete</a>
+                      </li>
+                    </ul>
+                  </div>
+                </div>
+              </nav>
+        </div>
+        <!-- Nav bar End -->
+        
+        <div class="container mt-5">
+          <h1 style="text-align: center; color: white; background-color: black;">TO DO LIST INCOMPLETE TASK</h1>
+          <table id="incompleteTasksTable" class="table table-bordered bg-success">
+            <tr style="color: white;">
+                <th>Priority</th>
+                <th>Date</th>
+                <th>Time</th>
+                <th>Task Name</th>
+                <th>Description</th>
+            </tr>
+        </table>
+        </div>
+      
+
+      <script>
+        // step1: Retrieve the tasks from local storage.form task are add in taskview page
+                 var tasks = JSON.parse(localStorage.getItem("tasks")) || [];        // store task for local storage  or empty array
+
+        // step2: Filter the tasks to only include incompleted tasks.
+                    var incompleteTasks = tasks.filter(task => !task.completed);
+                    var incompleteTable = document.getElementById("incompleteTasksTable");
+                    incompleteTasks.forEach(function (taskData) {
+                        var newRow = createTableRow(taskData);  // Create a new row in the table.
+                        incompleteTable.appendChild(newRow);    // Append the new row to the table.
+        });
+
+        // step3: write aFunction to create a row in the table (same function as on the main page)
+                    function createTableRow(taskData) {
+                        var newRow = document.createElement("tr"); // Create a new row element.
+            
+                        var priorityCell = document.createElement("td"); // Create cells in the table
+                        var dateCell = document.createElement("td");
+                        var timeCell = document.createElement("td");
+                        var taskNameCell = document.createElement("td");
+                        var descriptionCell = document.createElement("td");
+            
+                        priorityCell.innerHTML = taskData.priority;   // Set the cell values.  
+                        dateCell.innerHTML = taskData.date;
+                        timeCell.innerHTML = taskData.time;
+                        taskNameCell.innerHTML = taskData.taskName;
+                        descriptionCell.innerHTML = taskData.description;
+            
+                        newRow.appendChild(priorityCell);  // Append the cells to the row.
+                        newRow.appendChild(dateCell);
+                        newRow.appendChild(timeCell);
+                        newRow.appendChild(taskNameCell);
+                        newRow.appendChild(descriptionCell);
+            
+                        return newRow;        // Return the row.
+                    }
+    </script>
+
+     <!-- Footer start -->
+<div class="container my-5 bg-dark">
+  <footer class="text-center text-lg-start text-white">
+      <div class="container p-4 pb-0">
+          <!-- Section: Links -->
+          <section class="">
+              <!--Grid row-->
+              <div class="row">
+                  <!-- Grid column -->
+                  <div class="col-md-4 col-lg-3 col-xl-3 mx-auto mt-3">
+                      <h6 class="text-uppercase mb-4 font-weight-bold">
+                          Institute name
+                      </h6>
+                      
+                      
+                      <img src="abesit.jpg" alt="abesit">
+                  </div>
+
+                  <hr class="w-100 clearfix d-md-none" />
+
+                  <!-- Grid column -->
+                  <div class="col-md-4 col-lg-3 col-xl-3 mx-auto mt-3">
+                      <h6 class="text-uppercase mb-4 font-weight-bold">
+                          About us
+                      </h6>
+                      <p>
+                          <a class="text-white">shivanshu singh</a>
+                      </p>
+                      <p>
+                          <a class="text-white">CSEDS</a>
+                      </p>
+                      <img src="SHIV.jpg" alt="" style="height: 149px; width: 122px;">
+                  </div>
+
+                  <hr class="w-100 clearfix d-md-none" />
+
+                  <div class="col-md-4 col-lg-3 col-xl-3 mx-auto mt-3">
+                      <h6 class="text-uppercase mb-4 font-weight-bold">Contact</h6>
+                      <p><i class="fas fa-home mr-3"></i> INDIA, UTTARPRADESH Meerut 250205</p>
+                      <p><i class="far fa-envelope mr-3"></i> singhshivanshu732000@gmail.com</p>
+                      <p><i class="fas fa-phone mr-3"></i> 7818057913</p>
+                  </div>
+              </div>
+          </section>
+          <hr class="my-3">
+
+          <!-- Section: Copyright -->
+          <section class="p-3 pt-0">
+              <div class="row d-flex align-items-center">
+                  <!-- Grid column -->
+                  <div class="col-md-7 col-lg-8 text-center text-md-start">
+                      <!-- Copyright -->
+                      <div class="p-3">
+                          © 2023 Copyright:
+                          <a class="text-white" href="#"></a>
+                      </div>
+                      <!-- Copyright -->
+                  </div>
+
+                  <!-- Grid column -->
+                  <div class="col-md-5 col-lg-4 ml-lg-0 text-center text-md-end">
+                      <!--Youtube -->
+                      <a class="btn btn-outline-light btn-floating m-1" href="https://www.youtube.com/channel/UCLtEHcq1VW0xcIpvJg2PXzw" role="button">
+                          <i class="fab fa-youtube"></i>
+                      </a>
+
+                      <!-- Twitter -->
+                      <a class="btn btn-outline-light btn-floating m-1" href="#" role="button">
+                          <i class="fab fa-twitter"></i>
+                      </a>
+
+                      <!-- Instagram -->
+                      <a class="btn btn-outline-light btn-floating m-1" href="https://www.instagram.com/singhshivanshu732000/" role="button">
+                          <i class="fab fa-instagram"></i>
+                      </a>
+
+                      <!-- Github -->
+                      <a class="btn btn-outline-light btn-floating m-1" href="https://github.com/Shivanshu7818r" role="button">
+                          <i class="fab fa-github"></i>
+                      </a>
+                      
+                  </div>
+              </div>
+          </section>
+      </div>
+  </footer>
+</div>
+<!-- Footer End -->
+         </body>
+</html>

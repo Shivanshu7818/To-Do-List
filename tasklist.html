@@ -1,0 +1,297 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Next Page</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css" rel="stylesheet">
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/js/bootstrap.bundle.min.js"></script>
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css" rel="stylesheet">
+    <style>
+        body {    
+            background-image: url("./dolist.png");
+        } 
+    </style>
+    
+</head>
+<body>
+    <!-- Nav bar start -->
+    <div class="container" id="main">
+        <nav class="navbar navbar-expand-lg navbar-dark bg-dark">
+            <div class="container-fluid">
+                <img src="logo.png" alt="" width="50" height="50" class="d-inline-block align-text-top">
+                <a class="navbar-brand" href="#"><h1>To Do LIST</h1></a>
+                <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+                    <span class="navbar-toggler-icon"></span>
+                </button>
+                <div class="collapse navbar-collapse" id="navbarSupportedContent">
+                    <ul class="navbar-nav ms-auto mb-2 mb-lg-0">
+                        <li class="nav-item">
+                            <a class="nav-link active" aria-current="page" href="layout.html">Home</a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link active" aria-current="page" href="tasklist.html">Tasklist</a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link active" aria-current="page" href="complete.html">Complete</a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link active" aria-current="page" href="incomplete.html">Incomplete</a>
+                        </li>
+                    </ul>
+                </div>
+            </div>
+        </nav>
+    </div>
+    <!-- Nav bar End -->
+
+
+    <div class="container mt-5">
+        
+        <h1 style="text-align: center; color: white; background-color: black;">TO DO TASK LIST</h1>
+        <!-- step1: create an empty table , table id is "taskTable" -->
+        <table id="taskTable" class="table table-bordered bg-info">
+            <tr style="color: white;">
+                <th>Priority</th>
+                <th>Date</th>
+                <th>Time</th>
+                <th>Task Name</th>
+                <th>Description</th>
+                <th>Edit</th>
+                <th>Save</th>
+                <th>Delete</th>
+                <th>CheckBox</th> 
+            </tr>
+        </table>
+    </div>
+     
+    <script>
+        // step2: Retrieve the tasks from local storage form task are add in layout page
+            var tasks = JSON.parse(localStorage.getItem("tasks")) || [];  // store task for local storage  or empty array
+
+        // step3: write a function to create a row in the table
+        function createTableRow(taskData) {
+            var newRow = document.createElement("tr");  //Create a new row (newRow) element.
+
+            var priorityCell = document.createElement("td");  //Create new table data (td) elements for each column in the table: priorityCell
+            var dateCell = document.createElement("td");      // datecell
+            var timeCell = document.createElement("td");      //timecell
+            var taskNameCell = document.createElement("td");  //tasknamecell
+            var descriptionCell = document.createElement("td"); //descriptioncell 
+            var editCell = document.createElement("td");        //editcell
+            var saveCell = document.createElement("td");        //savecell
+            var deleteCell = document.createElement("td");      //deletecell
+            var completedCell = document.createElement("td");   //completecell
+            var checkbox = document.createElement("input");     //Create an input element (checkbox) .
+            checkbox.type = "checkbox";                         //type "checkbox" to represent the task's completion status
+            checkbox.checked = taskData.completed;              //Set the checkbox's checked property to the value of taskData.completed.
+           
+           
+            checkbox.addEventListener("change", function () {   // This code sets up an addeventlistener on a checkbox element.
+                taskData.completed = this.checked;              // When the checkbox is checked or unchecked:  Update the taskData.completed with the new checkbox state.
+                localStorage.setItem("tasks", JSON.stringify(tasks));    // Convert the tasks array to a JSON string and save it in the local storage with the key "tasks".
+            });
+            completedCell.appendChild(checkbox);    //add a checkbox element completedcell
+
+            var prioritySelect = document.createElement("select");//crete a dropdown select elements priority
+            var options = ["High", "Medium", "Low"];
+            for (var i = 0; i < options.length; i++) {      //loop for
+                var option = document.createElement("option");   // Create an option element.
+                option.text = options[i];
+                option.value = options[i];
+                if (option.value === taskData.priority) {        // If the option's value matches the task's priority, pre-select this option.
+                    option.selected = true;
+                }
+                prioritySelect.appendChild(option);         // Add the option to the prioritySelect dropdown.
+            }
+            prioritySelect.addEventListener("change", function () {     // Add an event listener to the prioritySelect dropdown. When the user changes the selected priority, the function is executed.
+                taskData.priority = this.value;
+                localStorage.setItem("tasks", JSON.stringify(tasks));     // Save the updated task list in the browser's memory (local storage).
+            });
+            priorityCell.appendChild(prioritySelect);       //add the  prioritySelect dropdownto prioritycell
+
+            dateCell.innerHTML = taskData.date; // Set the cell contents to the task's data.
+            timeCell.innerHTML = taskData.time;
+            taskNameCell.innerHTML = taskData.taskName;
+            descriptionCell.innerHTML = taskData.description;
+
+            // Set the edit, save, and delete buttons click handlers.
+            editCell.innerHTML = '<button class="btn btn-primary" onclick="editTask(this)">Edit</button>';
+            saveCell.innerHTML = '<button class="btn btn-success" onclick="saveTask(this)">Save</button>';
+            deleteCell.innerHTML = '<button class="btn btn-danger" onclick="deleteTask(this)">Delete</button>';
+
+            // Append all the cells to the newRow, forming a complete row in the table.
+            newRow.appendChild(priorityCell);
+            newRow.appendChild(dateCell);
+            newRow.appendChild(timeCell);
+            newRow.appendChild(taskNameCell);
+            newRow.appendChild(descriptionCell);
+            newRow.appendChild(editCell);
+            newRow.appendChild(saveCell);
+            newRow.appendChild(deleteCell);
+            newRow.appendChild(completedCell);
+            return newRow;  //return newrow 
+        }
+
+        //step4: Retrieve the tasks from local storage and add the "completed" property if it doesn't exist
+        tasks.forEach(function (taskData) {     // Loop through each taskData in the tasks array
+            if (taskData.completed === undefined) {     // Check if the 'completed' property is not defined
+                taskData.completed = false;          // If 'completed' is not defined, set it to false
+            }
+        });
+
+        // step5: Display the tasks in the table
+        var table = document.getElementById("taskTable");   //Get the table element with the id "taskTable" in html
+        tasks.forEach(function (taskData) {         // Loop  foreach taskData in the tasks array
+            var newRow = createTableRow(taskData);        // Create a new table row 
+            table.appendChild(newRow);          // Append the new row element to the table
+        });
+
+        // step6: write a Function to handle the edit button click
+        function editTask(button) {
+            var row = button.parentNode.parentNode; //first parentnode is tr & second parentnode is td
+            var cells = row.getElementsByTagName("td");    // Get all cells in the row
+            
+            // Enable editing for all cells except the first one (priority)
+            for (var i = 1; i < cells.length - 4; i++) {
+                cells[i].contentEditable = true;
+            }
+        }
+
+        // step7: write a Function to handle the save button click
+            function saveTask(button) {
+                var row = button.parentNode.parentNode; //first parentnode is tr & second parentnode is td
+
+                var cells = row.getElementsByTagName("td"); // Get all cells in the row
+
+                // Disable editing for all cells 
+                for (var i = 0; i < cells.length - 4; i++) {
+                    cells[i].contentEditable = false;
+                }
+
+                // Get the selected priority from the dropdown
+                var priorityCell = cells[0]; // First cell in the row, which contains the priority dropdown
+                var prioritySelect = priorityCell.querySelector("select"); // Find the dropdown element within the first cell
+                var selectedPriority = prioritySelect.value; // Get the selected value from the dropdown
+
+                // Update the task data in the local storage
+                var rowIndex = row.rowIndex - 1; // Get the index of the row in the table 
+
+                // Assuming 'tasks' is an array that contains the task data
+                // Update the priority, date, time, taskName, and description of the task
+                tasks[rowIndex].priority = selectedPriority; 
+                tasks[rowIndex].date = cells[1].innerHTML;
+                tasks[rowIndex].time = cells[2].innerHTML; 
+                tasks[rowIndex].taskName = cells[3].innerHTML; 
+                tasks[rowIndex].description = cells[4].innerHTML; 
+
+               
+                localStorage.setItem("tasks", JSON.stringify(tasks));  // Save the updated 'tasks' array back to local storage as a JSON string
+            }
+
+
+        //step:8 write a Function to handle the delete button click
+            function deleteTask(button) {
+        
+                var row = button.parentNode.parentNode;  //first parentnode is tr & second parentnode is td
+                row.parentNode.removeChild(row);  // Remove the entire row from the table
+
+                // Update the task data in the local storage after deletion
+                var rowIndex = row.rowIndex - 1; 
+                tasks.splice(rowIndex, 1);  // Remove the task at the rowIndex from the 'tasks' array
+
+        
+                localStorage.setItem("tasks", JSON.stringify(tasks));      // Save the updated 'tasks' array back to local storage as a JSON string
+            }
+    </script>
+
+
+ <!-- Footer start -->
+ <div class="container my-5 bg-dark">
+    <footer class="text-center text-lg-start text-white">
+        <div class="container p-4 pb-0">
+            <!-- Section: Links -->
+            <section class="">
+                <!--Grid row-->
+                <div class="row">
+                    <!-- Grid column -->
+                    <div class="col-md-4 col-lg-3 col-xl-3 mx-auto mt-3">
+                        <h6 class="text-uppercase mb-4 font-weight-bold">
+                            Institute name
+                        </h6>
+                       
+                        <img src="abesit.jpg" alt="abesit">
+                    </div>
+
+                    <hr class="w-100 clearfix d-md-none" />
+
+                    <!-- Grid column -->
+                    <div class="col-md-4 col-lg-3 col-xl-3 mx-auto mt-3">
+                        <h6 class="text-uppercase mb-4 font-weight-bold">
+                            About us
+                        </h6>
+                        <p>
+                            <a class="text-white">Shivanshu singh</a>
+                        </p>
+                        <p>
+                            <a class="text-white">CSEDS</a>
+                        </p>
+                        <img src="SHIV.jpg" alt="" style="height: 149px; width: 122px;">
+                    </div>
+
+                    <hr class="w-100 clearfix d-md-none" />
+
+                    <div class="col-md-4 col-lg-3 col-xl-3 mx-auto mt-3">
+                        <h6 class="text-uppercase mb-4 font-weight-bold">Contact</h6>
+                        <p><i class="fas fa-home mr-3"></i> INDIA, UTTARPRADESH Meerut 250205 </p>
+                        <p><i class="far fa-envelope mr-3"></i> singhshivanshu732000@gmail.com</p>
+                        <p><i class="fas fa-phone mr-3"></i> 7818057913</p>
+                    </div>
+                </div>
+            </section>
+            <hr class="my-3">
+
+            <!-- Section: Copyright -->
+            <section class="p-3 pt-0">
+                <div class="row d-flex align-items-center">
+                    <!-- Grid column -->
+                    <div class="col-md-7 col-lg-8 text-center text-md-start">
+                        <!-- Copyright -->
+                        <div class="p-3">
+                            © 2023 Copyright:
+                            <a class="text-white" href="#"></a>
+                        </div>
+                        <!-- Copyright -->
+                    </div>
+
+                    <!-- Grid column -->
+                    <div class="col-md-5 col-lg-4 ml-lg-0 text-center text-md-end">
+                        <!--Youtube -->
+                        <a class="btn btn-outline-light btn-floating m-1" href="https://www.youtube.com/channel/UCLtEHcq1VW0xcIpvJg2PXzw" role="button">
+                            <i class="fab fa-youtube"></i>
+                        </a>
+
+                        <!-- Twitter -->
+                        <a class="btn btn-outline-light btn-floating m-1" href="#" role="button">
+                            <i class="fab fa-twitter"></i>
+                        </a>
+
+                        <!-- Instagram -->
+                        <a class="btn btn-outline-light btn-floating m-1" href="https://www.instagram.com/singhshivanshu732000/" role="button">
+                            <i class="fab fa-instagram"></i>
+                        </a>
+
+                        <!-- Github -->
+                        <a class="btn btn-outline-light btn-floating m-1" href="https://github.com/Shivanshu7818/" role="button">
+                            <i class="fab fa-github"></i>
+                        </a>
+                        
+                    </div>
+                </div>
+            </section>
+        </div>
+    </footer>
+</div>
+<!-- Footer End -->
+</body>
+</html>
